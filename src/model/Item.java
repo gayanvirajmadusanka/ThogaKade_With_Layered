@@ -10,6 +10,7 @@ package model;
  * @author Acer
  */
 public class Item {
+
     private String itemCode;
     private String itemDescription;
     private double itemUnitPrice;
@@ -56,6 +57,5 @@ public class Item {
     public void setItemQtyOnHand(int itemQtyOnHand) {
         this.itemQtyOnHand = itemQtyOnHand;
     }
-    
-    
+
 }

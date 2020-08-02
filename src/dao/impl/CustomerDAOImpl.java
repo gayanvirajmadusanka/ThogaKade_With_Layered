@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dao;
+package dao.impl;
 
+import dao.CrudUtill;
+import dao.CustomerDAO;
 import db.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

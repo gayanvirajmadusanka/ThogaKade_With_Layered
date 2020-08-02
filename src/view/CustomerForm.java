@@ -28,7 +28,7 @@ public class CustomerForm extends javax.swing.JFrame {
         initComponents();
         setVisible(true);
         setLocationRelativeTo(null);
-//        getAllCustomers();
+        getAllCustomers();
     }
 
     /**
@@ -242,16 +242,18 @@ public class CustomerForm extends javax.swing.JFrame {
 
             if (customer == null) {
                 JOptionPane.showMessageDialog(rootPane, "No customer found in " + customerId);
+                clearAllTextFields();
+            } else {
+
+                cusIdTextField.setText(customer.getId());
+                cusNameTextField.setText(customer.getName());
+                cusAddressTextField.setText(customer.getAddress());
+                cusSalaryTextField.setText(Double.toString(customer.getSalary()));
             }
-
-            cusIdTextField.setText(customer.getId());
-            cusNameTextField.setText(customer.getName());
-            cusAddressTextField.setText(customer.getAddress());
-            cusSalaryTextField.setText(Double.toString(customer.getSalary()));
-
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(CustomerForm.class.getName()).log(Level.SEVERE, null, ex);
         }
+        getAllCustomers();
     }//GEN-LAST:event_serachCustomerCustomerActionPerformed
 
     private void addCustomerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCustomerButtonActionPerformed
@@ -268,17 +270,14 @@ public class CustomerForm extends javax.swing.JFrame {
 
             if (isAdded) {
                 JOptionPane.showMessageDialog(rootPane, "Customer Added");
-                cusIdTextField.setText("");
-                cusNameTextField.setText("");
-                cusAddressTextField.setText("");
-                cusSalaryTextField.setText("");
+                clearAllTextFields();
             } else {
                 JOptionPane.showMessageDialog(rootPane, "Customer is not added");
             }
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(CustomerForm.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        getAllCustomers();
     }//GEN-LAST:event_addCustomerButtonActionPerformed
 
     private void deleteCustomerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCustomerButtonActionPerformed
@@ -288,27 +287,25 @@ public class CustomerForm extends javax.swing.JFrame {
 
             if (customerId.isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "Please insert customer ID");
-            }
-
-            CustomerController customerController = new CustomerController();
-            boolean isDeleted = customerController.deleteCustomer(customerId);
-            if (isDeleted) {
-                JOptionPane.showMessageDialog(rootPane, "Customer is Deleted");
-                cusIdTextField.setText("");
-                cusNameTextField.setText("");
-                cusAddressTextField.setText("");
-                cusSalaryTextField.setText("");
             } else {
-//                JOptionPane.showMessageDialog(rootPane, "Customer is  not Deleted");
-                cusIdTextField.setText("");
-                cusNameTextField.setText("");
-                cusAddressTextField.setText("");
-                cusSalaryTextField.setText("");
-            }
 
+                CustomerController customerController = new CustomerController();
+                boolean isDeleted = customerController.deleteCustomer(customerId);
+                if (isDeleted) {
+                    JOptionPane.showMessageDialog(rootPane, "Customer is Deleted");
+                    cusIdTextField.setText("");
+                    cusNameTextField.setText("");
+                    cusAddressTextField.setText("");
+                    cusSalaryTextField.setText("");
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Customer is  not Deleted");
+                    clearAllTextFields();
+                }
+            }
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(CustomerForm.class.getName()).log(Level.SEVERE, null, ex);
         }
+        getAllCustomers();
     }//GEN-LAST:event_deleteCustomerButtonActionPerformed
 
     private void updateCustomerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateCustomerButtonActionPerformed
@@ -326,10 +323,7 @@ public class CustomerForm extends javax.swing.JFrame {
 
             if (isUpdated) {
                 JOptionPane.showMessageDialog(rootPane, "Customer Updated");
-                cusIdTextField.setText("");
-                cusNameTextField.setText("");
-                cusAddressTextField.setText("");
-                cusSalaryTextField.setText("");
+                clearAllTextFields();
             } else {
                 JOptionPane.showMessageDialog(rootPane, "Customer is not updated");
             }
@@ -337,6 +331,7 @@ public class CustomerForm extends javax.swing.JFrame {
         } catch (ClassNotFoundException | SQLException ex) {
             JOptionPane.showMessageDialog(rootPane, "System Error");
         }
+        getAllCustomers();
     }//GEN-LAST:event_updateCustomerButtonActionPerformed
 
     private void viewCustomerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewCustomerButtonActionPerformed
@@ -347,6 +342,13 @@ public class CustomerForm extends javax.swing.JFrame {
     private void cusIdTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cusIdTextFieldActionPerformed
         serachCustomerCustomerActionPerformed(evt);
     }//GEN-LAST:event_cusIdTextFieldActionPerformed
+    private void clearAllTextFields() {
+        cusIdTextField.setText("");
+        cusNameTextField.setText("");
+        cusAddressTextField.setText("");
+        cusSalaryTextField.setText("");
+    }
+
     public void getAllCustomers() {
 
         try {

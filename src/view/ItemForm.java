@@ -7,7 +7,6 @@ package view;
 
 import controller.CustomerController;
 import controller.ItemController;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -30,7 +29,7 @@ public class ItemForm extends javax.swing.JFrame {
         initComponents();
         setVisible(true);
         setLocationRelativeTo(null);
-//        getAllCustomers();
+        getAllItems();
     }
 
     /**
@@ -60,7 +59,7 @@ public class ItemForm extends javax.swing.JFrame {
         viewItemButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Customer Form");
+        setTitle("Item Form");
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         jLabel1.setText("Item Form");
@@ -79,6 +78,11 @@ public class ItemForm extends javax.swing.JFrame {
         jLabel3.setText("Item Description   :");
 
         itemDescriptionTextField.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        itemDescriptionTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemDescriptionTextFieldActionPerformed(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel4.setText("Item Unit Price      :");
@@ -237,23 +241,30 @@ public class ItemForm extends javax.swing.JFrame {
     private void serarchItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serarchItemButtonActionPerformed
 
         try {
-            String customerId = itemCodeTextField.getText();
+            String itemCode = itemCodeTextField.getText();
 
-            CustomerController customerController = new CustomerController();
-            Customer customer = customerController.searchCustomer(customerId);
+            if (itemCode.isEmpty()) {
+                JOptionPane.showMessageDialog(rootPane, "Please enter a Item Code" + itemCode);
+            } else {
 
-            if (customer == null) {
-                JOptionPane.showMessageDialog(rootPane, "No customer found in " + customerId);
+                ItemController itemController = new ItemController();
+                Item item = itemController.searchItem(itemCode);
+
+                if (item == null) {
+                    JOptionPane.showMessageDialog(rootPane, "No item found in " + itemCode);
+                    clearAllTextFields();
+                } else {
+                    itemCodeTextField.setText(item.getItemCode());
+                    itemDescriptionTextField.setText(item.getItemDescription());
+                    itemUnitPriceTextField.setText(Double.toString(item.getItemUnitPrice()));
+                    itemQtyOnHandTextField.setText(Integer.toString(item.getItemQtyOnHand()));
+                }
+
             }
-
-            itemCodeTextField.setText(customer.getId());
-            itemDescriptionTextField.setText(customer.getName());
-            itemUnitPriceTextField.setText(customer.getAddress());
-            itemQtyOnHandTextField.setText(Double.toString(customer.getSalary()));
-
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ItemForm.class.getName()).log(Level.SEVERE, null, ex);
         }
+        getAllItems();
     }//GEN-LAST:event_serarchItemButtonActionPerformed
 
     private void addItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addItemButtonActionPerformed
@@ -267,13 +278,10 @@ public class ItemForm extends javax.swing.JFrame {
             Item item = new Item(itemCode, itemDescription, itemUnitPrice, itemQtyOnHand);
             ItemController itemController = new ItemController();
             boolean isAdded = itemController.addItem(item);
-            
+
             if (isAdded) {
                 JOptionPane.showMessageDialog(rootPane, "Item Added");
-                itemCodeTextField.setText("");
-                itemDescriptionTextField.setText("");
-                itemUnitPriceTextField.setText("");
-                itemQtyOnHandTextField.setText("");
+                clearAllTextFields();
             } else {
                 JOptionPane.showMessageDialog(rootPane, "Item is not added");
             }
@@ -281,95 +289,100 @@ public class ItemForm extends javax.swing.JFrame {
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(ItemForm.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        getAllItems();
     }//GEN-LAST:event_addItemButtonActionPerformed
 
     private void deleteItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteItemButtonActionPerformed
 
         try {
-            String customerId = itemCodeTextField.getText();
+            String itemCode = itemCodeTextField.getText();
 
-            if (customerId.isEmpty()) {
-                JOptionPane.showMessageDialog(rootPane, "Please insert customer ID");
-            }
-
-            CustomerController customerController = new CustomerController();
-            boolean isDeleted = customerController.deleteCustomer(customerId);
-            if (isDeleted) {
-                JOptionPane.showMessageDialog(rootPane, "Customer is Deleted");
-                itemCodeTextField.setText("");
-                itemDescriptionTextField.setText("");
-                itemUnitPriceTextField.setText("");
-                itemQtyOnHandTextField.setText("");
+            if (itemCode.isEmpty()) {
+                JOptionPane.showMessageDialog(rootPane, "Please insert Item Code");
             } else {
-//                JOptionPane.showMessageDialog(rootPane, "Customer is  not Deleted");
-                itemCodeTextField.setText("");
-                itemDescriptionTextField.setText("");
-                itemUnitPriceTextField.setText("");
-                itemQtyOnHandTextField.setText("");
-            }
 
+                ItemController itemController = new ItemController();
+                boolean isDeleted = itemController.deleteItem(itemCode);
+                if (isDeleted) {
+                    JOptionPane.showMessageDialog(rootPane, "Item is Deleted");
+                    clearAllTextFields();
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Item is  not Deleted");
+                    clearAllTextFields();
+                }
+            }
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ItemForm.class.getName()).log(Level.SEVERE, null, ex);
         }
+        getAllItems();
     }//GEN-LAST:event_deleteItemButtonActionPerformed
 
     private void updateItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateItemButtonActionPerformed
 
-        String customerId = itemCodeTextField.getText();
+        String itemCode = itemCodeTextField.getText();
 
         try {
-            String customerName = itemDescriptionTextField.getText();
-            String customerAddress = itemUnitPriceTextField.getText();
-            double customerSalary = Double.parseDouble(itemQtyOnHandTextField.getText());
+            String itemDescription = itemDescriptionTextField.getText();
+            double itemUnitPrice = Double.parseDouble(itemUnitPriceTextField.getText());
+            int itemQtyOnHand = Integer.parseInt(itemQtyOnHandTextField.getText());
 
-            Customer customer = new Customer(customerId, customerName, customerAddress, customerSalary);
-            CustomerController customerController = new CustomerController();
-            boolean isUpdated = customerController.updateCustomer(customer);
+            Item item = new Item(itemCode, itemDescription, itemUnitPrice, itemQtyOnHand);
+            ItemController itemController = new ItemController();
+            boolean isUpdated = itemController.updateItem(item);
 
             if (isUpdated) {
-                JOptionPane.showMessageDialog(rootPane, "Customer Updated");
-                itemCodeTextField.setText("");
-                itemDescriptionTextField.setText("");
-                itemUnitPriceTextField.setText("");
-                itemQtyOnHandTextField.setText("");
+                JOptionPane.showMessageDialog(rootPane, "Item Updated");
+                clearAllTextFields();
             } else {
-                JOptionPane.showMessageDialog(rootPane, "Customer is not updated");
+                JOptionPane.showMessageDialog(rootPane, "Item is not updated");
+                clearAllTextFields();
             }
 
         } catch (ClassNotFoundException | SQLException ex) {
             JOptionPane.showMessageDialog(rootPane, "System Error");
+            clearAllTextFields();
         }
+        getAllItems();
     }//GEN-LAST:event_updateItemButtonActionPerformed
 
     private void viewItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewItemButtonActionPerformed
         // TODO add your handling code here:
-        getAllCustomers();
+        getAllItems();
     }//GEN-LAST:event_viewItemButtonActionPerformed
 
     private void itemCodeTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCodeTextFieldActionPerformed
 
+        serarchItemButtonActionPerformed(evt);
     }//GEN-LAST:event_itemCodeTextFieldActionPerformed
-    public void getAllCustomers() {
+
+    private void itemDescriptionTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemDescriptionTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_itemDescriptionTextFieldActionPerformed
+    public void getAllItems() {
 
         try {
             DefaultTableModel dtm = (DefaultTableModel) itemTbl.getModel();
 
-            CustomerController customerController = new CustomerController();
-            ArrayList<Customer> allCustomers;
-            allCustomers = customerController.viewCustomer();
+            ItemController itemController = new ItemController();
+            ArrayList<Item> allItems;
+            allItems = itemController.viewItem();
             dtm.setRowCount(0);
 
-            for (Customer c : allCustomers) {
-                Object row[] = {c.getId(), c.getName(), c.getAddress(), c.getSalary()};
+            for (Item allItem : allItems) {
+                Object row[] = {allItem.getItemCode(), allItem.getItemDescription(), allItem.getItemUnitPrice(), allItem.getItemQtyOnHand()};
                 dtm.addRow(row);
             }
 
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ItemForm.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ItemForm.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private void clearAllTextFields() {
+        itemCodeTextField.setText("");
+        itemDescriptionTextField.setText("");
+        itemUnitPriceTextField.setText("");
+        itemQtyOnHandTextField.setText("");
     }
 
     /**
