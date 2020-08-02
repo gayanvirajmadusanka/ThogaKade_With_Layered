@@ -1,35 +1,32 @@
 package controller;
 
-import dao.CustomerDAO;
-import dao.DAOFactory;
-import dao.impl.CustomerDAOImpl;
-import model.Customer;
+import bo.BOFactory;
+import bo.custom.CustomerBO;
+import dto.CustomerDTO;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class CustomerController {
 
-//    CustomerDAOImpl customerDAOImpl = new CustomerDAOImpl();
-    CustomerDAO customerDAO = (CustomerDAO) DAOFactory.getInstance().getDAO(DAOFactory.DAOTypes.CUSTOMER);
+    CustomerBO customerBO = (CustomerBO) BOFactory.getInstance().getBo(BOFactory.BOTypes.CUSTOMER);
 
-    public boolean addCustomer(Customer customer) throws SQLException, ClassNotFoundException {
-
-        return customerDAO.add(customer);
+    public boolean addCustomer(CustomerDTO cdto) throws SQLException, ClassNotFoundException, Exception {
+        return customerBO.addCustomer(cdto);
     }
 
-    public Customer searchCustomer(String id) throws ClassNotFoundException, SQLException {
-        return customerDAO.search(id);
+    public CustomerDTO searchCustomer(String id) throws ClassNotFoundException, SQLException, Exception {
+        return customerBO.searchCustomer(id);
     }
 
-    public boolean updateCustomer(Customer customer) throws ClassNotFoundException, SQLException {
-        return customerDAO.update(customer);
+    public boolean updateCustomer(CustomerDTO cdto) throws ClassNotFoundException, SQLException, Exception {
+        return customerBO.updateCustomer(cdto);
     }
 
-    public boolean deleteCustomer(String id) throws ClassNotFoundException, SQLException {
-        return customerDAO.delete(id);
+    public boolean deleteCustomer(String id) throws ClassNotFoundException, SQLException, Exception {
+        return customerBO.deleteCustomer(id);
     }
 
-    public ArrayList<Customer> viewCustomer() throws ClassNotFoundException, SQLException {
-        return customerDAO.view();
+    public ArrayList<CustomerDTO> viewCustomer() throws ClassNotFoundException, SQLException, Exception {
+        return customerBO.getAllCustomer();
     }
 }

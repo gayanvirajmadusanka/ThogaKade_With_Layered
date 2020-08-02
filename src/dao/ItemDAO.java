@@ -5,12 +5,12 @@
  */
 package dao;
 
-import model.Item;
+import entity.ItemEntity;
 
 /**
  *
  * @author Acer
  */
-public interface ItemDAO extends CrudDAO<Item,String>{
+public interface ItemDAO extends CrudDAO<ItemEntity,String>{
     
 }

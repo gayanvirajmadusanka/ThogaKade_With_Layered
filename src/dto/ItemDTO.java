@@ -3,23 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package dto;
 
 /**
  *
  * @author Acer
  */
-public class Item {
-
+public class ItemDTO {
     private String itemCode;
     private String itemDescription;
     private double itemUnitPrice;
     private int itemQtyOnHand;
 
-    public Item() {
+    public ItemDTO() {
     }
 
-    public Item(String itemCode, String itemDescription, double itemUnitPrice, int itemQtyOnHand) {
+    public ItemDTO(String itemCode, String itemDescription, double itemUnitPrice, int itemQtyOnHand) {
         this.itemCode = itemCode;
         this.itemDescription = itemDescription;
         this.itemUnitPrice = itemUnitPrice;
@@ -57,5 +56,6 @@ public class Item {
     public void setItemQtyOnHand(int itemQtyOnHand) {
         this.itemQtyOnHand = itemQtyOnHand;
     }
-
+    
+    
 }

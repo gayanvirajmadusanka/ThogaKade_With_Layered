@@ -3,14 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dao;
-
-import model.OrderDetails;
+package bo;
 
 /**
  *
  * @author Acer
  */
-public interface OrderDetailsDAO extends CrudDAO<OrderDetails, String>{
+public interface SuperBO {
     
 }

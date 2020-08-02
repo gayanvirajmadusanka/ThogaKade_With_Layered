@@ -6,14 +6,13 @@
 package view;
 
 import controller.CustomerController;
-import java.sql.ResultSet;
+import dto.CustomerDTO;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import model.Customer;
 
 /**
  *
@@ -238,19 +237,21 @@ public class CustomerForm extends javax.swing.JFrame {
             String customerId = cusIdTextField.getText();
 
             CustomerController customerController = new CustomerController();
-            Customer customer = customerController.searchCustomer(customerId);
+            CustomerDTO customerDTO = customerController.searchCustomer(customerId);
 
-            if (customer == null) {
+            if (customerDTO == null) {
                 JOptionPane.showMessageDialog(rootPane, "No customer found in " + customerId);
                 clearAllTextFields();
             } else {
 
-                cusIdTextField.setText(customer.getId());
-                cusNameTextField.setText(customer.getName());
-                cusAddressTextField.setText(customer.getAddress());
-                cusSalaryTextField.setText(Double.toString(customer.getSalary()));
+                cusIdTextField.setText(customerDTO.getId());
+                cusNameTextField.setText(customerDTO.getName());
+                cusAddressTextField.setText(customerDTO.getAddress());
+                cusSalaryTextField.setText(Double.toString(customerDTO.getSalary()));
             }
         } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(CustomerForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(CustomerForm.class.getName()).log(Level.SEVERE, null, ex);
         }
         getAllCustomers();
@@ -264,9 +265,9 @@ public class CustomerForm extends javax.swing.JFrame {
             String customerAddress = cusAddressTextField.getText();
             double customerSalary = Double.parseDouble(cusSalaryTextField.getText());
 
-            Customer customer = new Customer(customerId, customerName, customerAddress, customerSalary);
+            CustomerDTO customerDTO = new CustomerDTO(customerId, customerName, customerAddress, customerSalary);
             CustomerController customerController = new CustomerController();
-            boolean isAdded = customerController.addCustomer(customer);
+            boolean isAdded = customerController.addCustomer(customerDTO);
 
             if (isAdded) {
                 JOptionPane.showMessageDialog(rootPane, "Customer Added");
@@ -275,6 +276,8 @@ public class CustomerForm extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(rootPane, "Customer is not added");
             }
         } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(CustomerForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(CustomerForm.class.getName()).log(Level.SEVERE, null, ex);
         }
         getAllCustomers();
@@ -304,6 +307,8 @@ public class CustomerForm extends javax.swing.JFrame {
             }
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(CustomerForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(CustomerForm.class.getName()).log(Level.SEVERE, null, ex);
         }
         getAllCustomers();
     }//GEN-LAST:event_deleteCustomerButtonActionPerformed
@@ -317,9 +322,9 @@ public class CustomerForm extends javax.swing.JFrame {
             String customerAddress = cusAddressTextField.getText();
             double customerSalary = Double.parseDouble(cusSalaryTextField.getText());
 
-            Customer customer = new Customer(customerId, customerName, customerAddress, customerSalary);
+            CustomerDTO customerDTO = new CustomerDTO(customerId, customerName, customerAddress, customerSalary);
             CustomerController customerController = new CustomerController();
-            boolean isUpdated = customerController.updateCustomer(customer);
+            boolean isUpdated = customerController.updateCustomer(customerDTO);
 
             if (isUpdated) {
                 JOptionPane.showMessageDialog(rootPane, "Customer Updated");
@@ -330,6 +335,8 @@ public class CustomerForm extends javax.swing.JFrame {
 
         } catch (ClassNotFoundException | SQLException ex) {
             JOptionPane.showMessageDialog(rootPane, "System Error");
+        } catch (Exception ex) {
+            Logger.getLogger(CustomerForm.class.getName()).log(Level.SEVERE, null, ex);
         }
         getAllCustomers();
     }//GEN-LAST:event_updateCustomerButtonActionPerformed
@@ -355,11 +362,11 @@ public class CustomerForm extends javax.swing.JFrame {
             DefaultTableModel dtm = (DefaultTableModel) customerTbl.getModel();
 
             CustomerController customerController = new CustomerController();
-            ArrayList<Customer> allCustomers;
+            ArrayList<CustomerDTO> allCustomers;
             allCustomers = customerController.viewCustomer();
             dtm.setRowCount(0);
 
-            for (Customer c : allCustomers) {
+            for (CustomerDTO c : allCustomers) {
                 Object row[] = {c.getId(), c.getName(), c.getAddress(), c.getSalary()};
                 dtm.addRow(row);
             }
@@ -367,6 +374,8 @@ public class CustomerForm extends javax.swing.JFrame {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(CustomerForm.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
+            Logger.getLogger(CustomerForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(CustomerForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

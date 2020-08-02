@@ -5,13 +5,14 @@
  */
 package dao;
 
-import model.Customer;
+import entity.CustomerEntity;
 
 /**
  *
  * @author Acer
  */
-public interface CustomerDAO extends CrudDAO<Customer, String>{
+public interface CustomerDAO extends CrudDAO<CustomerEntity, String> {
+
     String getCustomerLastID();
 
 }

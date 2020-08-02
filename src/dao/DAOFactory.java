@@ -15,7 +15,7 @@ import dao.impl.QueryDAOImpl;
  */
 public class DAOFactory {
 
-    public static DAOFactory dAOFactory;
+    private static DAOFactory dAOFactory;
 
     public DAOFactory() {
     }

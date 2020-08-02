@@ -5,16 +5,14 @@
  */
 package view;
 
-import controller.CustomerController;
 import controller.ItemController;
+import dto.ItemDTO;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import model.Customer;
-import model.Item;
 
 /**
  *
@@ -248,20 +246,22 @@ public class ItemForm extends javax.swing.JFrame {
             } else {
 
                 ItemController itemController = new ItemController();
-                Item item = itemController.searchItem(itemCode);
+                ItemDTO itemDTO = itemController.searchItem(itemCode);
 
-                if (item == null) {
+                if (itemDTO == null) {
                     JOptionPane.showMessageDialog(rootPane, "No item found in " + itemCode);
                     clearAllTextFields();
                 } else {
-                    itemCodeTextField.setText(item.getItemCode());
-                    itemDescriptionTextField.setText(item.getItemDescription());
-                    itemUnitPriceTextField.setText(Double.toString(item.getItemUnitPrice()));
-                    itemQtyOnHandTextField.setText(Integer.toString(item.getItemQtyOnHand()));
+                    itemCodeTextField.setText(itemDTO.getItemCode());
+                    itemDescriptionTextField.setText(itemDTO.getItemDescription());
+                    itemUnitPriceTextField.setText(Double.toString(itemDTO.getItemUnitPrice()));
+                    itemQtyOnHandTextField.setText(Integer.toString(itemDTO.getItemQtyOnHand()));
                 }
 
             }
         } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(ItemForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(ItemForm.class.getName()).log(Level.SEVERE, null, ex);
         }
         getAllItems();
@@ -275,9 +275,9 @@ public class ItemForm extends javax.swing.JFrame {
             double itemUnitPrice = Double.parseDouble(itemUnitPriceTextField.getText());
             int itemQtyOnHand = Integer.parseInt(itemQtyOnHandTextField.getText());
 
-            Item item = new Item(itemCode, itemDescription, itemUnitPrice, itemQtyOnHand);
+            ItemDTO itemDTO = new ItemDTO(itemCode, itemDescription, itemUnitPrice, itemQtyOnHand);
             ItemController itemController = new ItemController();
-            boolean isAdded = itemController.addItem(item);
+            boolean isAdded = itemController.addItem(itemDTO);
 
             if (isAdded) {
                 JOptionPane.showMessageDialog(rootPane, "Item Added");
@@ -287,6 +287,8 @@ public class ItemForm extends javax.swing.JFrame {
             }
 
         } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(ItemForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(ItemForm.class.getName()).log(Level.SEVERE, null, ex);
         }
         getAllItems();
@@ -313,6 +315,8 @@ public class ItemForm extends javax.swing.JFrame {
             }
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ItemForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(ItemForm.class.getName()).log(Level.SEVERE, null, ex);
         }
         getAllItems();
     }//GEN-LAST:event_deleteItemButtonActionPerformed
@@ -326,9 +330,9 @@ public class ItemForm extends javax.swing.JFrame {
             double itemUnitPrice = Double.parseDouble(itemUnitPriceTextField.getText());
             int itemQtyOnHand = Integer.parseInt(itemQtyOnHandTextField.getText());
 
-            Item item = new Item(itemCode, itemDescription, itemUnitPrice, itemQtyOnHand);
+            ItemDTO itemDTO = new ItemDTO(itemCode, itemDescription, itemUnitPrice, itemQtyOnHand);
             ItemController itemController = new ItemController();
-            boolean isUpdated = itemController.updateItem(item);
+            boolean isUpdated = itemController.updateItem(itemDTO);
 
             if (isUpdated) {
                 JOptionPane.showMessageDialog(rootPane, "Item Updated");
@@ -341,6 +345,8 @@ public class ItemForm extends javax.swing.JFrame {
         } catch (ClassNotFoundException | SQLException ex) {
             JOptionPane.showMessageDialog(rootPane, "System Error");
             clearAllTextFields();
+        } catch (Exception ex) {
+            Logger.getLogger(ItemForm.class.getName()).log(Level.SEVERE, null, ex);
         }
         getAllItems();
     }//GEN-LAST:event_updateItemButtonActionPerformed
@@ -364,16 +370,18 @@ public class ItemForm extends javax.swing.JFrame {
             DefaultTableModel dtm = (DefaultTableModel) itemTbl.getModel();
 
             ItemController itemController = new ItemController();
-            ArrayList<Item> allItems;
+            ArrayList<ItemDTO> allItems;
             allItems = itemController.viewItem();
             dtm.setRowCount(0);
 
-            for (Item allItem : allItems) {
+            for (ItemDTO allItem : allItems) {
                 Object row[] = {allItem.getItemCode(), allItem.getItemDescription(), allItem.getItemUnitPrice(), allItem.getItemQtyOnHand()};
                 dtm.addRow(row);
             }
 
         } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(ItemForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(ItemForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

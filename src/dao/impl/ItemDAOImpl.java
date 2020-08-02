@@ -7,11 +7,10 @@ package dao.impl;
 
 import dao.CrudUtill;
 import dao.ItemDAO;
+import entity.ItemEntity;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import model.Customer;
-import model.Item;
 
 /**
  *
@@ -20,22 +19,22 @@ import model.Item;
 public class ItemDAOImpl implements ItemDAO {
 
     @Override
-    public boolean add(Item item) throws SQLException, ClassNotFoundException {
-        return CrudUtill.executeUpdate("insert into Item values(?,?,?,?)", item.getItemCode(), item.getItemDescription(), item.getItemUnitPrice(), item.getItemQtyOnHand());
+    public boolean add(ItemEntity itemEntity) throws SQLException, ClassNotFoundException {
+        return CrudUtill.executeUpdate("insert into Item values(?,?,?,?)", itemEntity.getItemCode(), itemEntity.getItemDescription(), itemEntity.getItemUnitPrice(), itemEntity.getItemQtyOnHand());
     }
 
     @Override
-    public Item search(String id) throws ClassNotFoundException, SQLException {
+    public ItemEntity search(String id) throws ClassNotFoundException, SQLException {
         ResultSet resultSet = CrudUtill.executeQuery("SELECT * FROM Item WHERE code=?", id);
         if (resultSet.next()) {
-            return new Item(resultSet.getString(1), resultSet.getString(2), resultSet.getDouble(3), resultSet.getInt(4));
+            return new ItemEntity(resultSet.getString(1), resultSet.getString(2), resultSet.getDouble(3), resultSet.getInt(4));
         }
         return null;
     }
 
     @Override
-    public boolean update(Item item) throws ClassNotFoundException, SQLException {
-        return CrudUtill.executeUpdate("UPDATE item SET description=?,unitPrice=?,qtyOnHand=? WHERE code=?", item.getItemDescription(), item.getItemUnitPrice(), item.getItemQtyOnHand(), item.getItemCode());
+    public boolean update(ItemEntity itemEntity) throws ClassNotFoundException, SQLException {
+        return CrudUtill.executeUpdate("UPDATE item SET description=?,unitPrice=?,qtyOnHand=? WHERE code=?", itemEntity.getItemDescription(), itemEntity.getItemUnitPrice(), itemEntity.getItemQtyOnHand(), itemEntity.getItemCode());
     }
 
     @Override
@@ -44,11 +43,11 @@ public class ItemDAOImpl implements ItemDAO {
     }
 
     @Override
-    public ArrayList<Item> view() throws ClassNotFoundException, SQLException {
+    public ArrayList<ItemEntity> view() throws ClassNotFoundException, SQLException {
         ResultSet resultSet = CrudUtill.executeQuery("SELECT * FROM Item");
-        ArrayList<Item> arrayList = new ArrayList<>();
-        while (resultSet.next()) {            
-            arrayList.add(new Item(resultSet.getString("code"), resultSet.getString("description"), resultSet.getDouble("unitPrice"), resultSet.getInt("qtyOnHand")));
+        ArrayList<ItemEntity> arrayList = new ArrayList<>();
+        while (resultSet.next()) {
+            arrayList.add(new ItemEntity(resultSet.getString("code"), resultSet.getString("description"), resultSet.getDouble("unitPrice"), resultSet.getInt("qtyOnHand")));
         }
         return arrayList;
     }

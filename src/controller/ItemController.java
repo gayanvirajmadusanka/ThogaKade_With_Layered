@@ -1,37 +1,32 @@
 package controller;
 
-import dao.DAOFactory;
-import dao.ItemDAO;
-import dao.impl.CustomerDAOImpl;
-import dao.impl.ItemDAOImpl;
-import model.Customer;
+import bo.BOFactory;
+import bo.custom.ItemBO;
+import dto.ItemDTO;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import model.Item;
 
 public class ItemController {
 
-//    ItemDAO itemDAO = new ItemDAOImpl();
-    ItemDAO itemDAO = (ItemDAO) DAOFactory.getInstance().getDAO(DAOFactory.DAOTypes.ITEM);
+    ItemBO itemBO = (ItemBO) BOFactory.getInstance().getBo(BOFactory.BOTypes.ITEM);
 
-    public boolean addItem(Item item) throws SQLException, ClassNotFoundException {
-
-        return itemDAO.add(item);
+    public boolean addItem(ItemDTO itemDTO) throws SQLException, ClassNotFoundException, Exception {
+        return itemBO.addItem(itemDTO);
     }
 
-    public Item searchItem(String id) throws ClassNotFoundException, SQLException {
-        return itemDAO.search(id);
+    public ItemDTO searchItem(String id) throws ClassNotFoundException, SQLException, Exception {
+        return itemBO.searchItem(id);
     }
 
-    public boolean updateItem(Item item) throws ClassNotFoundException, SQLException {
-        return itemDAO.update(item);
+    public boolean updateItem(ItemDTO itemDTO) throws ClassNotFoundException, SQLException, Exception {
+        return itemBO.updateItem(itemDTO);
     }
 
-    public boolean deleteItem(String id) throws ClassNotFoundException, SQLException {
-        return itemDAO.delete(id);
+    public boolean deleteItem(String id) throws ClassNotFoundException, SQLException, Exception {
+        return itemBO.deleteItem(id);
     }
 
-    public ArrayList<Item> viewItem() throws ClassNotFoundException, SQLException {
-        return itemDAO.view();
+    public ArrayList<ItemDTO> viewItem() throws ClassNotFoundException, SQLException, Exception {
+        return itemBO.getAllItem();
     }
 }
